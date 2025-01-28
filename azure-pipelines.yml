@@ -39,8 +39,7 @@ steps:
         --project-dir /app/shared/ \
         -o commit.connect.url=$CONNECT_URL \
         -o commit.connect.project=vulnado-docker \
-        -o commit.connect.stream=vulnado-docker \
-        -- mvn clean install"
+        -o commit.connect.stream=vulnado-docker"
     displayName: "Run Coverity scan"
 
   # Step 6: Stop and remove the container (optional)
