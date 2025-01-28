@@ -1,0 +1,9 @@
+
+trigger:
+- azure-pipelines
+
+pool:
+  name: Azure Pipelines
+
+steps:
+- script: |
