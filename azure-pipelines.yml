@@ -1,5 +1,3 @@
-trigger:
-  azure-cov-docker
 
 pool:
   name: Default
