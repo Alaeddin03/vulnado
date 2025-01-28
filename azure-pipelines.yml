@@ -51,5 +51,5 @@ steps:
   # Step 7: Display contents of the shared folder on the agent
   - script: |
       echo "Contents of the shared folder on the agent VM:"
-      ls -R $(sharedVolumeName)
+      ls -R $(Pipeline.Workspace)/$(sharedVolumeName)
     displayName: "List shared folder contents"
