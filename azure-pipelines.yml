@@ -21,7 +21,7 @@ steps:
   # Step 3: Run the container with shared volume
   - script: |
       docker run -it -d --name cov-container \
-      -v $(sharedVolumeName):/app/shared \
+      -v $(Pipeline.Workspace)/$(sharedVolumeName):/app/shared \
       -e CONNECT_URL=$(CONNECT_URL) \
       -e COV_USER=$(COV_USER) \
       -e COVERITY_PASSPHRASE=$(COVERITY_PASSPHRASE) \
