@@ -1,6 +1,6 @@
 
 trigger:
-- azure-pipelines
+- azure-cov-docker
 
 pool:
   name: Azure Pipelines
