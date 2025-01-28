@@ -3,7 +3,62 @@ trigger:
 - azure-pipelines
 
 pool:
-  name: Azure Pipelines
+  vmImage: 'ubuntu-latest'
+
+variables:
+  imageName: 'alaeddin735/blackduck:cov'
+  sharedVolumeName: 'cov-share'
 
 steps:
-- script: |
+
+  # Step 0: Test Coverity connection
+  - script: |
+      curl -I $(CONNECT_URL)
+    displayName: "Test connection to Coverity Connect"
+
+  # Step 1: Login to Docker Hub
+  - script: |
+      echo $(dockerHubPAT) | docker login -u $(dockerHubUsername) --password-stdin
+    displayName: "Login to Docker Hub"
+
+  # Step 2: Pull the private image
+  - script: |
+      docker pull $(imageName)
+    displayName: "Pull Docker image"
+
+  # Step 3: Run the container with shared volume
+  - script: |
+      docker run -it -d --name cov-container \
+      -v $(sharedVolumeName):/app/shared \
+      -e CONNECT_URL=$(CONNECT_URL) \
+      -e COV_USER=$(COV_USER) \
+      -e COVERITY_PASSPHRASE=$(COVERITY_PASSPHRASE) \
+      $(imageName)
+    displayName: "Run Docker container"
+
+  # Step 4: Clone the repository into the shared volume
+  - script: |
+      docker exec cov-container sh -c "git clone $(Build.Repository.Uri) /app/shared"
+    displayName: "Clone repository inside container"
+
+  # Step 5: Run the Coverity scan
+  - script: |
+      docker exec cov-container sh -c "cd /app/cov-analysis-linux64-2024.12.0/bin && ./coverity scan \
+        --project-dir /app/shared/ \
+        -o commit.connect.url=$CONNECT_URL \
+        -o commit.connect.project=vulnado-docker \
+        -o commit.connect.stream=vulnado-docker \
+        -- mvn clean install"
+    displayName: "Run Coverity scan"
+
+  # Step 6: Stop and remove the container (optional)
+  - script: |
+      docker stop cov-container
+      docker rm cov-container
+    displayName: "Clean up Docker container"
+  
+  # Step 7: Display contents of the shared folder on the agent
+  - script: |
+      echo "Contents of the shared folder on the agent VM:"
+      ls -R $(sharedVolumeName)
+    displayName: "List shared folder contents"
