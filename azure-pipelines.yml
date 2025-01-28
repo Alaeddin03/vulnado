@@ -1,3 +1,8 @@
+trigger:
+  azure-cov-docker
+
+pool:
+  name: Default
 
 steps:
   # Step 0: Test Coverity connection
