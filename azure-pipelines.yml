@@ -30,7 +30,7 @@ steps:
 
   # Step 4: Clone the repository into the shared volume
   - script: |
-      docker exec cov-container sh -c "git clone $(Build.Repository.Uri) /app/shared"
+      docker exec cov-container sh -c "git clone $(Build.Repository.Uri) /app/shared/vulnado"
     displayName: "Clone repository inside container"
 
   # Step 5: Run the Coverity scan
