@@ -10,7 +10,6 @@ variables:
   sharedVolumeName: 'cov-share'
 
 steps:
-
   # Step 0: Test Coverity connection
   - script: |
       curl -I $(CONNECT_URL)
