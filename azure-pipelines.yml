@@ -1,8 +1,4 @@
 
-variables:
-  imageName: 'alaeddin735/blackduck:cov'
-  sharedVolumeName: 'cov-share'
-
 steps:
   # Step 0: Test Coverity connection
   - script: |
